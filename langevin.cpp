@@ -169,23 +169,28 @@ double lf_integrator::vx_std(std::vector<particle>& particles) {
 
 #endif // RAND_LF_H_
 
+void prueba(std::vector<particle>& particles);
+
 int main() {
     int SEED = 0;
     gsl_rng* r = gsl_rng_alloc(gsl_rng_mt19937);
     gsl_rng_set(r, SEED);
 
-    std::vector<particle> bs;
-
     particle pini(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
-    for (auto& p : bs) {
-        p=pini;
-        std::cout << p.x << " " << p.vx << "\n";
+    std::vector<particle> bs(10,pini);
+
+/*  for (auto& p : bs) {
+        p.R = 0.0; p.x = 0.0; p.c_x = 0.0; p.y = 0.0; p.c_y = 0.0; p.vx = 0.0; p.vy = 0.0; p.Fx = 0.0; p.Fy = 0.0; p.Dvx = 0.0; p.Dvy = 0.0; p.W = 0.0;
     }
+
+    */
+
+    prueba(bs);
 
     std::cout << "Nada que ver" << "\n";
 
-    double dt = 0.01, t_end = 1000;
+    double dt = 1, t_end = 1000;
     double k = 4, f=1-exp(-dt*4.0), T=4;
 
     lf_integrator osc(dt, f, T);
@@ -206,7 +211,7 @@ int main() {
         osc.update_v2(bs);
 
         outfile << t << " " << osc.x_avg(bs) << " " << osc.x_std(bs) << " " 
-                            << osc.vx_avg(bs) << " " << osc.vx_std(bs) << "\n" ;    
+                            << osc.vx_avg(bs) << " " << osc.vx_std(bs) << "\n" ;
     }
 
     outfile.close();
@@ -215,4 +220,10 @@ int main() {
 
     std::cout << "Esta cosa compila" << "\n";
     return 0;
+}
+
+void prueba(std::vector<particle>& particles){
+    for (auto& p : particles) {
+        std::cout << p.R << " " <<  p.x << " " << p.c_x << " " << p.y << " " << p.c_y << " " << p.vx << " " << p.vy << " " << p.Fx << " " << p.Fy << " " << p.Dvx << " " << p.Dvy << " " << p.W << "\n";
+    }
 }
