@@ -1,4 +1,3 @@
 g++ -o langevin langevin.cpp `gsl-config --cflags --libs`
 
-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
 

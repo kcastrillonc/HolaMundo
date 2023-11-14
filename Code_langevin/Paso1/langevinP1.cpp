@@ -187,14 +187,14 @@ int main() {
     gsl_rng* r = gsl_rng_alloc(gsl_rng_mt19937);
     gsl_rng_set(r, SEED);
 
-    particle pini(0.0, /*x*/ 0.0, 0.0, 0.0, 0.0, /*vx*/ 10.0, 0.0, 0.0, 0.0);
+    particle pini(0.0, /*x*/ 10.0, 0.0, 0.0, 0.0, /*vx*/ 0.0, 0.0, 0.0, 0.0);
 
     std::vector<particle> bs(10000,pini); /*1000 partículas con
                                            condiciones iniciales pini*/
     //prueba(bs);
 
-    double dt = 1, t_end = 2000, gamma = 0.50;
-    double k = 4, f=1-exp(-dt*gamma), T=2.50; /*kboltzmann=1, masa=1*/
+    double dt = 1, t_end = 2000, gamma = 0.10;
+    double k = 3.1, f=1-exp(-dt*gamma), T=2.50; /*kboltzmann=1, masa=1*/
 
     outfile.open("parametros.dat");
 
@@ -209,12 +209,20 @@ int main() {
     osc.update_F(bs, k);
     osc.initialize_v(bs);
 
-    std::string ss = "datos_gamma"+ToString(gamma)+".dat";
+    std::string ss = "datosP1_k"+ToString(k)+
+                        "_gamma"+ToString(gamma)+
+                            "_T"+ToString(T)+".dat";
 
     outfile.open(ss.c_str());
 
-    for (double t = 0; t < t_end; t += dt) {
-        //osc.update_F(bs, k); /*Si no se actualiza F, siempre se mantiene F=0*/
+    outfile << 0 << " " << osc.x_std(bs) << " ";
+    for (auto& p : bs) {
+        outfile << p.x << " "; /*Impresión de posiciones en t=0*/
+        }
+    outfile << "\n" ;
+
+    for (double t = 1; t < t_end; t += dt) {
+        osc.update_F(bs, k); /*Si no se actualiza F, siempre se mantiene F=0*/
                                /*Esto reproduce el comportamiento difusivo*/
 
         osc.update_v1(bs);
@@ -230,20 +238,14 @@ int main() {
             outfile << p.x << " "; /*Impresión de posiciones en cada paso de tiempo*/
         }
         outfile << "\n" ;
-
-        outfile << t << " " << osc.vx_std(bs) << " ";
-        for (auto& p : bs) {
-            outfile << p.vx << " "; /*Impresión de velocidades en cada paso de tiempo*/
-        }
-        outfile << "\n" ;
     }
 
     outfile.close();
 
     gsl_rng_free(r);
 
-    std::cout << "Esta cosa compila." << "\n"
-              << "Posiciones en fila par (paridad del 0), velocidades en fila impar (paridad del 1)." << "\n";
+    std::cout << "Esta cosa compila." << "\n";
+
     return 0;
 }
 
