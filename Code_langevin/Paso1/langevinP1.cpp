@@ -187,14 +187,14 @@ int main() {
     gsl_rng* r = gsl_rng_alloc(gsl_rng_mt19937);
     gsl_rng_set(r, SEED);
 
-    particle pini(0.0, /*x*/ 10.0, 0.0, 0.0, 0.0, /*vx*/ 0.0, 0.0, 0.0, 0.0);
+    particle pini(0.0, /*x*/ 20.0, 0.0, 0.0, 0.0, /*vx*/ 0.0, 0.0, 0.0, 0.0);
 
     std::vector<particle> bs(10000,pini); /*1000 partículas con
                                            condiciones iniciales pini*/
     //prueba(bs);
 
-    double dt = 1, t_end = 2000, gamma = 0.10;
-    double k = 3.1, f=1-exp(-dt*gamma), T=2.50; /*kboltzmann=1, masa=1*/
+    double gamma = 1, dt = 1/*/(10*gamma)*/, t_end = 100/**dt*/;
+    double k = 0.2, f=1-exp(-dt*gamma), T=0.5; /*kboltzmann=1, masa=1*/
 
     outfile.open("parametros.dat");
 
